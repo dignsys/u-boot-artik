@@ -1,13 +1,12 @@
-Name: u-boot-artik7
+Name: u-boot-artik530
 Summary: Bootloader for Embedded boards based on ARM processor
 Version: 2016.01
 Release: 0
 Group: System/Kernel
 License: GPL-2.0+
-ExclusiveArch: aarch64
+ExclusiveArch: %{arm}
 URL: http://www.denx.de/wiki/U-Boot
 Source0: %{name}-%{version}.tar.bz2
-Source1001: packaging/u-boot-artik7.manifest
 
 BuildRequires: u-boot-tools
 
@@ -18,10 +17,9 @@ bootloader for Embedded boards based on ARM processor
 %setup -q
 
 %build
-cp %{SOURCE1001} .
 
 # Set configuration
-make artik710_raptor_config
+make artik530_raptor_config
 
 # Build tools
 make  %{?_smp_mflags} HOSTSTRIP=/bin/true tools
@@ -36,16 +34,13 @@ tr '\0' '\n' < copy_env_common.o > default_envs.txt
 tools/mkenvimage -s 16384 -o params.bin default_envs.txt
 rm copy_env_common.o default_envs.txt
 
-# gen_fip_image
-tools/fip_create/fip_create --dump --bl33 u-boot.bin fip-nonsecure.bin
-
 # gen_nexell_image
-tools/nexell/SECURE_BINGEN \
-		-c S5P6818 -t 3rdboot \
-		-n tools/nexell/nsih/raptor-64.txt \
-		-i fip-nonsecure.bin \
-		-o fip-nonsecure.img \
-		-l 0x7df00000 -e 0x00000000
+tools/nexell/BOOT_BINGEN \
+		-c S5P4418 -t 3rdboot \
+		-n tools/nexell/nsih/raptor-emmc.txt \
+		-i u-boot.bin \
+		-o bootloader.img \
+		-l 0x43c00000 -e %0x43c00000
 
 %install
 rm -rf %{buildroot}
@@ -53,12 +48,11 @@ rm -rf %{buildroot}
 # u-boot installation
 mkdir -p %{buildroot}/boot/u-boot
 install -d %{buildroot}/boot/u-boot
-install -m 755 fip-nonsecure.img %{buildroot}/boot/u-boot
+install -m 755 bootloader.img %{buildroot}/boot/u-boot
 install -m 755 params.bin %{buildroot}/boot/u-boot
 
 %clean
 
 %files
-%manifest u-boot-artik7.manifest
 %defattr(-,root,root,-)
 /boot/u-boot

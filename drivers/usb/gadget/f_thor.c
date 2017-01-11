@@ -276,7 +276,7 @@ static long long int process_rqt_download(const struct rqt_box *rqt)
 		}
 
 		thor_file_size = rqt->int_data[1];
-		memcpy(f_name, rqt->str_data[0], F_NAME_BUF_SIZE);
+		strncpy(f_name, rqt->str_data[0], F_NAME_BUF_SIZE - 1);
 
 		debug("INFO: name(%s, %d), size(%llu), type(%d)\n",
 		      f_name, 0, thor_file_size, file_type);

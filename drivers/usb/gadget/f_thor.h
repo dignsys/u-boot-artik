@@ -118,7 +118,7 @@ struct f_thor {
 	struct thor_dev *dev;
 };
 
-#define F_NAME_BUF_SIZE 32
+#define F_NAME_BUF_SIZE 64
 #define THOR_PACKET_SIZE SZ_1M      /* 1 MiB */
 #define THOR_STORE_UNIT_SIZE SZ_32M /* 32 MiB */
 #ifdef CONFIG_THOR_RESET_OFF

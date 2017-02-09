@@ -376,7 +376,9 @@
 	"modules part $rootdev $modulespart;" \
 	"rootfs part $rootdev $rootpart;" \
 	"params.bin raw 0x1701 0x20;" \
-	"/Image.itb ext4 $rootdev $bootpart\0"
+	"/Image.itb ext4 $rootdev $bootpart;" \
+	"system-data part 0 5;" \
+	"user part 0 6\0"
 
 #define CONFIG_EXTRA_ENV_SETTINGS					\
 	"fdt_high=0xffffffff\0"						\

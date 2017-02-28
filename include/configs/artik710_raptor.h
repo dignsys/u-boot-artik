@@ -103,6 +103,8 @@
 /* refer to common/env_common.c	*/
 #define CONFIG_BOOTDELAY			3
 
+#define CONFIG_SUPPORT_RAW_INITRD
+
 /*-----------------------------------------------------------------------
  * Miscellaneous configurable options
  */
@@ -356,7 +358,7 @@
 	"/uImage ext4 $rootdev $bootpart;" \
 	"/Image ext4 $rootdev $bootpart;" \
 	"/uInitrd ext4 $rootdev $bootpart;" \
-	"/ramdisk.gz ext4 $rootdev $bootpart;" \
+	"/ramdisk.img ext4 $rootdev $bootpart;" \
 	"/s5p6818-artik710-raptor-rev03.dtb ext4 $rootdev $bootpart;" \
 	"/s5p6818-artik710-raptor-rev02.dtb ext4 $rootdev $bootpart;" \
 	"/s5p6818-artik710-raptor-rev01.dtb ext4 $rootdev $bootpart;" \
@@ -374,6 +376,7 @@
 	"kerneladdr=0x40080000\0"					\
 	"kernel_file=Image\0"						\
 	"ramdiskaddr=0x49000000\0"					\
+	"ramdisksize=0x800000\0"							\
 	"ramdisk_file=uInitrd\0"					\
 	"fdtaddr=0x4a000000\0"						\
 	"fdtfile=\0"							\
@@ -441,10 +444,15 @@
 			"ext4load mmc ${rootdev}:${bootpart} $kerneladdr $kernel_file; " \
 			"run load_args; "				\
 		"fi;\0"							\
-	"load_initrd=ext4load mmc ${rootdev}:${bootpart} $ramdiskaddr $ramdisk_file\0" \
+	"load_kernel=ext4load mmc ${rootdev}:${bootpart} $kerneladdr $kernel_file\0" \
+	"load_initrd=" \
+		"if test -e mmc ${rootdev}:${bootpart} ramdisk.img; then " \
+			"setenv ramdisk_file ramdisk.img;" \
+		"fi;" \
+		"ext4load mmc ${rootdev}:${bootpart} $ramdiskaddr $ramdisk_file\0" \
 	"boot_cmd_initrd="						\
-		"run load_kernel; run load_fdt; run load_initrd;"	\
-		"booti $kerneladdr $ramdiskaddr $fdtaddr\0"		\
+		"run load_fdt; run load_kernel; run load_initrd;"	\
+		"booti $kerneladdr ${ramdiskaddr}:${ramdisksize} $fdtaddr\0"		\
 	"boot_cmd_mmcboot="						\
 		"run load_kernel; run load_fdt;"			\
 		"booti $kerneladdr - $fdtaddr\0"			\

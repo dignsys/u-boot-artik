@@ -40,7 +40,7 @@ tools/nexell/BOOT_BINGEN \
 		-n tools/nexell/nsih/raptor-emmc.txt \
 		-i u-boot.bin \
 		-o bootloader.img \
-		-l 0x43c00000 -e %0x43c00000
+		-l 0x43c00000 -e 0x43c00000
 
 %install
 rm -rf %{buildroot}

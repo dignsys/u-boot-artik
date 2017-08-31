@@ -19,7 +19,7 @@ bootloader for Embedded boards based on ARM processor
 %build
 
 # Set configuration
-make artik530_raptor_config
+make artik530_raptor_legacy_config
 
 # Build tools
 make  %{?_smp_mflags} HOSTSTRIP=/bin/true tools
@@ -35,12 +35,12 @@ tools/mkenvimage -s 16384 -o params.bin default_envs.txt
 rm copy_env_common.o default_envs.txt
 
 # gen_nexell_image
-tools/nexell/BOOT_BINGEN \
+tools/nexell/SECURE_BINGEN \
 		-c S5P4418 -t 3rdboot \
 		-n tools/nexell/nsih/raptor-emmc.txt \
 		-i u-boot.bin \
 		-o bootloader.img \
-		-l 0x43c00000 -e 0x43c00000
+		-l 0x94c00000 -e 0x94c00000
 
 %install
 rm -rf %{buildroot}

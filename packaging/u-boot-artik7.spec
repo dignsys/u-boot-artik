@@ -21,7 +21,7 @@ bootloader for Embedded boards based on ARM processor
 cp %{SOURCE1001} .
 
 # Set configuration
-make artik710_raptor_config
+make artik710_raptor_legacy_config
 
 # Build tools
 make  %{?_smp_mflags} HOSTSTRIP=/bin/true tools

@@ -208,6 +208,26 @@ int board_early_init_f(void)
 	return 0;
 }
 
+/* Set the environment value about booting from which device */
+static void set_booting_device(void)
+{
+	int port_num;
+	int boot_mode = readl(PHY_BASEADDR_CLKPWR + SYSRSTCONFIG);
+
+	if ((boot_mode & BOOTMODE_MASK) == BOOTMODE_SDMMC) {
+		port_num = readl(PHY_BASEADDR_SRAM + DEVICEBOOTINFO);
+		/*
+		 * Kernel will be detected as the below block devices.
+		 * mmcblk0 - eMMC card
+		 * mmcblk1 - SD card
+		 */
+		if (port_num == EMMC_PORT_NUM)
+			setenv("rootdev", "0");
+		else if (port_num == SD_PORT_NUM)
+			setenv("rootdev", "1");
+	}
+}
+
 int mmc_get_env_dev(void)
 {
 	int port_num;
@@ -374,6 +394,8 @@ int board_late_init(void)
 #ifdef CONFIG_ARTIK_OTA
 	check_ota_update();
 #endif
+	set_booting_device();
+
 	return 0;
 }
 

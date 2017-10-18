@@ -369,6 +369,7 @@
 	"/zImage ext4 $rootdev $bootpart;" \
 	"/uInitrd ext4 $rootdev $bootpart;" \
 	"/ramdisk.img ext4 $rootdev $bootpart;" \
+	"/ramdisk-recovery.img ext4 $rootdev $bootpart;" \
 	"/s5p4418-artik532-raptor-rev03.dtb ext4 $rootdev $bootpart;" \
 	"/s5p4418-artik530-raptor-rev03.dtb ext4 $rootdev $bootpart;" \
 	"/s5p4418-artik530-raptor-rev00.dtb ext4 $rootdev $bootpart;" \

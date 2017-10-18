@@ -359,6 +359,7 @@
 	"/Image ext4 $rootdev $bootpart;" \
 	"/uInitrd ext4 $rootdev $bootpart;" \
 	"/ramdisk.img ext4 $rootdev $bootpart;" \
+	"/ramdisk-recovery.img ext4 $rootdev $bootpart;" \
 	"/s5p6818-artik710-raptor-rev03.dtb ext4 $rootdev $bootpart;" \
 	"/s5p6818-artik710-raptor-rev02.dtb ext4 $rootdev $bootpart;" \
 	"/s5p6818-artik710-raptor-rev01.dtb ext4 $rootdev $bootpart;" \

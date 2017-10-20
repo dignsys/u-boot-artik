@@ -414,6 +414,10 @@
 	"root_rw=rw\0"							\
 	"opts=loglevel=4\0"						\
 	"rootfs_type=ext4\0"						\
+	"dfu_alt_info=" CONFIG_DFU_ALT					\
+	"dfu_usb_con=0\0"						\
+	"dfu_interface=mmc\0"						\
+	"dfu_device=0\0"						\
 	"lcd1_0=s6e8fa0\0"						\
 	"lcd2_0=gst7d0038\0"						\
 	"lcd_panel=s6e8fa0\0"						\

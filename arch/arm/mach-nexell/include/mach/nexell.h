@@ -350,4 +350,14 @@
 
 #endif	/* __ASSEMBLY__ */
 
+/* Use the ALIVESCRATCH7 For Tizen artik reboot */
+#define SCRATCHRSTREG7			0xF4
+#define SCRATCHSETREG7			0xF8
+#define SCRATCHREADREG7			0xFC
+#define REBOOT_PREFIX			0x12345670
+#define REBOOT_PREFIX_MASK		0xFFFFFFF0
+#define REBOOT_DOWNLOAD			0x1
+#define REBOOT_RECOVERY			0x2
+#define REBOOT_FOTA				0x3
+
 #endif /* __NEXELL_H__ */

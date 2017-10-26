@@ -422,7 +422,7 @@
 		"fi; setenv success; setenv number; setenv loop;\0"	\
 	"bootdelay=" __stringify(CONFIG_BOOTDELAY) "\0"			\
 	"console=" CONFIG_DEFAULT_CONSOLE				\
-	"console_default=setenv console " CONFIG_DEFAULT_CONSOLE "\0"	\
+	"console_default=setenv console " CONFIG_DEFAULT_CONSOLE	\
 	"consoleon=run console_default; saveenv; reset\0"		\
 	"consoleoff=setenv console ram; saveenv; reset\0"		\
 	"rootdev=" __stringify(CONFIG_ROOT_DEV) "\0"			\

@@ -476,6 +476,7 @@
 			"if test -e mmc ${rootdev}:${bootpart} ramdisk-recovery.img; then " \
 				"echo ${bootmode} booting.;"	\
 				"setenv ramdisk_file ramdisk-recovery.img;" \
+				"setenv ramdisksize 0xc00000;"          \
 			"else "	\
 				"echo There is no Recovery Image!!!;"	\
 				"echo Try to do the Normal Ramdisk Booting!!;"	\

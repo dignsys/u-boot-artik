@@ -472,7 +472,7 @@
 			"run load_args; "				\
 		"fi;\0"							\
 	"load_initrd=" \
-		"if test ${bootmode} = recovery; then; "	\
+		"if test ${bootmode} = recovery || test ${bootmode} = fota; then; "	\
 			"if test -e mmc ${rootdev}:${bootpart} ramdisk-recovery.img; then " \
 				"echo ${bootmode} booting.;"	\
 				"setenv ramdisk_file ramdisk-recovery.img;" \

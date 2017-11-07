@@ -14,6 +14,14 @@ BuildRequires: u-boot-tools
 %description
 bootloader for Embedded boards based on ARM processor
 
+%package -n nexell-tools
+Summary: tools to create nexell soc loadable image
+Group: System/Kernel
+
+%description -n nexell-tools
+This package includes SECURE_BINGEN and config files for the tool to create
+image with nexell format.
+
 %prep
 %setup -q
 
@@ -55,6 +63,10 @@ mkdir -p %{buildroot}/boot/u-boot
 install -d %{buildroot}/boot/u-boot
 install -m 755 fip-nonsecure.img %{buildroot}/boot/u-boot
 install -m 755 params.bin %{buildroot}/boot/u-boot
+mkdir -p %{buildroot}/boot/tools
+install -d %{buildroot}/boot/tools
+install -m 755 tools/nexell/SECURE_BINGEN %{buildroot}/boot/tools
+install -m 755 tools/nexell/nsih/raptor-64.txt %{buildroot}/boot/tools
 
 %clean
 
@@ -62,3 +74,6 @@ install -m 755 params.bin %{buildroot}/boot/u-boot
 %manifest u-boot-artik7.manifest
 %defattr(-,root,root,-)
 /boot/u-boot
+
+%files -n nexell-tools
+/boot/tools

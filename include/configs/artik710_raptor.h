@@ -355,7 +355,6 @@
 	"fip-loader-sd.img raw 0x81 0x280;" \
 	"fip-secure.img raw 0x301 0x600;" \
 	"fip-nonsecure.img raw 0xf01 0x800;" \
-	"/uImage ext4 $rootdev $bootpart;" \
 	"/Image ext4 $rootdev $bootpart;" \
 	"/uInitrd ext4 $rootdev $bootpart;" \
 	"/ramdisk.img ext4 $rootdev $bootpart;" \
@@ -410,6 +409,7 @@
 	"rootdev=" __stringify(CONFIG_ROOT_DEV) "\0"			\
 	"rootpart=" __stringify(CONFIG_ROOT_PART) "\0"			\
 	"bootpart=" __stringify(CONFIG_BOOT_PART) "\0"			\
+	"modulespart=" __stringify(CONFIG_MODULES_PART) "\0"		\
 	"rescue=0\0"							\
 	"root_rw=rw\0"							\
 	"opts=loglevel=4\0"						\

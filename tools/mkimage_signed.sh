@@ -69,7 +69,9 @@ elif [ $CONFIG == "odroid-xu3_defconfig" ]; then
 	echo -n "odroid_xu3" > sig-board
 elif [ $CONFIG == "artik530_raptor_config" ]; then
 	echo -n "artik530_raptor" > sig-board
-	OUTPUT_BIN="bootloader.img"
+	echo -n "1.0.0" > sig-product
+	OUTPUT_BIN="u-boot.bin"
+	INPUT_SIZE_LIMIT=$((${OUTPUT_SIZE} - ${SIGN_HDR_SIZE} - 512))
 elif [ $CONFIG == "artik710_raptor_config" ]; then
 	echo -n "artik710_raptor" > sig-board
 	OUTPUT_BIN="fip-nonsecure.img"
@@ -81,7 +83,7 @@ cat sig-magic /dev/zero | head -c 12 > sig-tmp
 cat sig-tmp sig-date /dev/zero | head -c 24 > sig-tmp2
 cat sig-tmp2 sig-product /dev/zero | head -c 48 > sig-tmp
 cat sig-tmp sig-board /dev/zero | head -c 512 > sig-hdr
-cat $INPUT_BIN /dev/zero | head -c 1048064 > u-boot-pad.bin
+cat $INPUT_BIN /dev/zero | head -c $INPUT_SIZE_LIMIT > u-boot-pad.bin
 cat u-boot-pad.bin sig-hdr > $OUTPUT_BIN
 
 echo
@@ -91,7 +93,7 @@ echo "SIG magic:   \"`cat sig-magic`\""
 echo "SIG size:     0"
 echo "SIG valid:    0"
 echo "SIG date:    \"`cat sig-date`\" (YYMMDDHH)"
-echo "SIG version: \"none\""
+echo "SIG version: \"`cat sig-product`\""
 echo "SIG board:   \"`cat sig-board`\""
 
 rm -f sig-* u-boot-pad.bin

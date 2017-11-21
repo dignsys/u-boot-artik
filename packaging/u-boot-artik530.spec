@@ -34,6 +34,10 @@ tr '\0' '\n' < copy_env_common.o > default_envs.txt
 tools/mkenvimage -s 16384 -o params.bin default_envs.txt
 rm copy_env_common.o default_envs.txt
 
+# Sign u-boot.bin - output is: u-boot.bin
+chmod 755 tools/mkimage_signed.sh
+./tools/mkimage_signed.sh u-boot.bin artik530_raptor_config
+
 # gen_nexell_image
 tools/nexell/SECURE_BINGEN \
 		-c S5P4418 -t 3rdboot \

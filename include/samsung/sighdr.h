@@ -8,6 +8,10 @@
 /* Size of u-boot-mmc.bin - should be always padded to 1MB */
 #define CONFIG_SIG_IMAGE_SIZE	SZ_1M
 
+#ifndef CONFIG_EXTRA_SIZE
+#define CONFIG_EXTRA_SIZE	0
+#endif
+
 /* HDR_SIZE - 512 */
 struct sig_header {
 	uint32_t magic;		/* image magic number */

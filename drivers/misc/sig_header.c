@@ -21,13 +21,18 @@ int check_board_signature(char *fname, phys_addr_t dn_addr, phys_size_t size)
 	struct sig_header bh_addr;
 	int ret;
 
-	/* u-boot-mmc.bin */
-	if (strncmp(fname, "u-boot-mmc.bin", 14))
+	/*
+	 * Bootloader names according to boards :
+	 * - Exynos Boards : u-boot-mmc.bin
+	 * - ARTIK530 : bootloader.img
+	 */
+	if (strncmp(fname, "u-boot-mmc.bin", 14) &&
+			strncmp(fname, "bootloader.img", 14))
 		return 0;
 
 	/* can't found signature in target - download continue */
 	ret = get_image_signature(&bh_target, (phys_addr_t)CONFIG_SYS_TEXT_BASE,
-				  CONFIG_SIG_IMAGE_SIZE);
+				  CONFIG_SIG_IMAGE_SIZE - CONFIG_EXTRA_SIZE);
 	if (ret)
 		return 0;
 
@@ -55,5 +60,15 @@ int check_board_signature(char *fname, phys_addr_t dn_addr, phys_size_t size)
 	}
 
 	printf("OK!\n");
+
+#ifdef CONFIG_MACH_S5P4418
+	printf("Target version : %s\n", bh_target.version);
+	printf("Image  version : %s\n", bh_addr.version);
+
+	if (strncmp(bh_target.version, bh_addr.version, 1)) {
+		printf("Invalid version!!!\n");
+		return - EPERM;
+	}
+#endif
 	return 0;
 }

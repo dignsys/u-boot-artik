@@ -44,6 +44,10 @@ tr '\0' '\n' < copy_env_common.o > default_envs.txt
 tools/mkenvimage -s 16384 -o params.bin default_envs.txt
 rm copy_env_common.o default_envs.txt
 
+# Sign u-boot.bin - output is: u-boot.bin
+chmod 755 tools/mkimage_signed.sh
+./tools/mkimage_signed.sh u-boot.bin artik710_raptor_config
+
 # gen_fip_image
 tools/fip_create/fip_create --dump --bl33 u-boot.bin fip-nonsecure.bin
 

@@ -43,6 +43,10 @@
 #define COUNTER_FREQUENCY			200000000
 #define CPU_RELEASE_ADDR			CONFIG_SYS_INIT_SP_ADDR
 
+/* Tizen */
+#define CONFIG_SIG
+#define CONFIG_EXTRA_SIZE	(SZ_1K + 0x60)	/* Nexell header(1K) + fip header(0x60) */
+
 /*-----------------------------------------------------------------------
  *  High Level System Configuration
  */

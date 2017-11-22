@@ -25,9 +25,11 @@ int check_board_signature(char *fname, phys_addr_t dn_addr, phys_size_t size)
 	 * Bootloader names according to boards :
 	 * - Exynos Boards : u-boot-mmc.bin
 	 * - ARTIK530 : bootloader.img
+	 * - ARTIK710: fip-nonsecure.img
 	 */
 	if (strncmp(fname, "u-boot-mmc.bin", 14) &&
-			strncmp(fname, "bootloader.img", 14))
+			strncmp(fname, "bootloader.img", 14) &&
+			strncmp(fname, "fip-nonsecure.img", 17))
 		return 0;
 
 	/* can't found signature in target - download continue */
@@ -61,7 +63,7 @@ int check_board_signature(char *fname, phys_addr_t dn_addr, phys_size_t size)
 
 	printf("OK!\n");
 
-#ifdef CONFIG_MACH_S5P4418
+#if defined(CONFIG_MACH_S5P4418) || defined(CONFIG_MACH_S5P6818)
 	printf("Target version : %s\n", bh_target.version);
 	printf("Image  version : %s\n", bh_addr.version);
 

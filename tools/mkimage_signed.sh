@@ -31,9 +31,9 @@ INPUT_SIZE_LIMIT=$((${OUTPUT_SIZE} - ${SIGN_HDR_SIZE}))
 if [ $# != $INPUT_ARGS ]; then
 	echo Bad arguments number!
 	echo "Usage:"
-	echo "./mksigimage.sh input.bin config"
+	echo "./mkimage_signed.sh <input binary> <config>"
 	echo "e.g.:"
-	echo "./mksigimage.sh u-boot-multi.bin tizen_config"
+	echo "./mkimage_signed.sh u-boot-multi.bin tizen_config"
 	exit
 fi
 
@@ -61,7 +61,7 @@ fi
 
 echo -n "BoOt" > sig-magic
 echo -n `date +%Y%m%d%H` > sig-date
-echo -n "none" > sig-product
+echo -n "none" > sig-version
 
 if [ $CONFIG == "tizen_defconfig" ]; then
 	echo -n "slp_midasq" > sig-board
@@ -69,12 +69,12 @@ elif [ $CONFIG == "odroid-xu3_defconfig" ]; then
 	echo -n "odroid_xu3" > sig-board
 elif [ $CONFIG == "artik530_raptor_config" ]; then
 	echo -n "artik530_raptor" > sig-board
-	echo -n "1.0.0" > sig-product
+	echo -n "1.0.0" > sig-version
 	OUTPUT_BIN="u-boot.bin"
 	INPUT_SIZE_LIMIT=$((${OUTPUT_SIZE} - ${SIGN_HDR_SIZE} - 512))
 elif [ $CONFIG == "artik710_raptor_config" ]; then
 	echo -n "artik710_raptor" > sig-board
-	echo -n "2.0.0" > sig-product
+	echo -n "2.0.0" > sig-version
 	INPUT_SIZE_LIMIT=$((${OUTPUT_SIZE} - ${SIGN_HDR_SIZE} - 1120))
 	OUTPUT_BIN="u-boot.bin"
 else
@@ -83,7 +83,7 @@ fi
 
 cat sig-magic /dev/zero | head -c 12 > sig-tmp
 cat sig-tmp sig-date /dev/zero | head -c 24 > sig-tmp2
-cat sig-tmp2 sig-product /dev/zero | head -c 48 > sig-tmp
+cat sig-tmp2 sig-version /dev/zero | head -c 48 > sig-tmp
 cat sig-tmp sig-board /dev/zero | head -c 512 > sig-hdr
 cat $INPUT_BIN /dev/zero | head -c $INPUT_SIZE_LIMIT > u-boot-pad.bin
 cat u-boot-pad.bin sig-hdr > $OUTPUT_BIN
@@ -95,12 +95,12 @@ echo "SIG magic:   \"`cat sig-magic`\""
 echo "SIG size:     0"
 echo "SIG valid:    0"
 echo "SIG date:    \"`cat sig-date`\" (YYMMDDHH)"
-echo "SIG version: \"`cat sig-product`\""
+echo "SIG version: \"`cat sig-version`\""
 echo "SIG board:   \"`cat sig-board`\""
 
 rm -f sig-* u-boot-pad.bin
 
-echo 
+echo
 echo "Output signed binary: ${OUTPUT_BIN}"
 echo "#####################################"
 

@@ -13,6 +13,8 @@ BuildRequires: u-boot-tools
 %description
 bootloader for Embedded boards based on ARM processor
 
+%define os_version 1.0.0
+
 %prep
 %setup -q
 
@@ -36,7 +38,7 @@ rm copy_env_common.o default_envs.txt
 
 # Sign u-boot.bin - output is: u-boot.bin
 chmod 755 tools/mkimage_signed.sh
-./tools/mkimage_signed.sh u-boot.bin artik530_raptor_config
+./tools/mkimage_signed.sh u-boot.bin artik530_raptor_config %{os_version}
 
 # gen_nexell_image
 tools/nexell/SECURE_BINGEN \

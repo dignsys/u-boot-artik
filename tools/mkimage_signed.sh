@@ -18,8 +18,10 @@
 #}
 
 INPUT_ARGS=2
+MAX_ARGS=3
 INPUT_BIN=${1}
 CONFIG=${2}
+VERSION=${3}
 
 OUTPUT_BIN="u-boot-mmc.bin"
 OUTPUT_SIZE=$((1024*1024))
@@ -28,10 +30,11 @@ SIGN_HDR_SIZE=512
 INPUT_SIZE_LIMIT=$((${OUTPUT_SIZE} - ${SIGN_HDR_SIZE}))
 
 # Check arguments count
-if [ $# != $INPUT_ARGS ]; then
+if [ $# -lt $INPUT_ARGS -a $# -gt $MAX_ARGS ]; then
 	echo Bad arguments number!
 	echo "Usage:"
-	echo "./mkimage_signed.sh <input binary> <config>"
+	echo "./mkimage_signed.sh <input binary> <config> {version}"
+	echo "	- {version} is optional"
 	echo "e.g.:"
 	echo "./mkimage_signed.sh u-boot-multi.bin tizen_config"
 	exit
@@ -61,7 +64,11 @@ fi
 
 echo -n "BoOt" > sig-magic
 echo -n `date +%Y%m%d%H` > sig-date
-echo -n "none" > sig-version
+if [ $VERSION ]; then
+	echo -n $VERSION > sig-version
+else
+	echo -n "none" > sig-version
+fi
 
 if [ $CONFIG == "tizen_defconfig" ]; then
 	echo -n "slp_midasq" > sig-board

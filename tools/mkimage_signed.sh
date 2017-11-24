@@ -76,12 +76,10 @@ elif [ $CONFIG == "odroid-xu3_defconfig" ]; then
 	echo -n "odroid_xu3" > sig-board
 elif [ $CONFIG == "artik530_raptor_config" ]; then
 	echo -n "artik530_raptor" > sig-board
-	echo -n "1.0.0" > sig-version
 	OUTPUT_BIN="u-boot.bin"
 	INPUT_SIZE_LIMIT=$((${OUTPUT_SIZE} - ${SIGN_HDR_SIZE} - 512))
 elif [ $CONFIG == "artik710_raptor_config" ]; then
 	echo -n "artik710_raptor" > sig-board
-	echo -n "2.0.0" > sig-version
 	INPUT_SIZE_LIMIT=$((${OUTPUT_SIZE} - ${SIGN_HDR_SIZE} - 1120))
 	OUTPUT_BIN="u-boot.bin"
 else

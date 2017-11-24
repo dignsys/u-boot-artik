@@ -22,6 +22,8 @@ Group: System/Kernel
 This package includes SECURE_BINGEN and config files for the tool to create
 image with nexell format.
 
+%define os_version 2.0.0
+
 %prep
 %setup -q
 
@@ -46,7 +48,7 @@ rm copy_env_common.o default_envs.txt
 
 # Sign u-boot.bin - output is: u-boot.bin
 chmod 755 tools/mkimage_signed.sh
-./tools/mkimage_signed.sh u-boot.bin artik710_raptor_config
+./tools/mkimage_signed.sh u-boot.bin artik710_raptor_config %{os_version}
 
 # gen_fip_image
 tools/fip_create/fip_create --dump --bl33 u-boot.bin fip-nonsecure.bin

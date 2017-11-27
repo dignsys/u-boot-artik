@@ -22,7 +22,7 @@ Group: System/Kernel
 This package includes SECURE_BINGEN and config files for the tool to create
 image with nexell format.
 
-%define os_version 2.0.0
+%define os_version 3.0.0
 
 %prep
 %setup -q

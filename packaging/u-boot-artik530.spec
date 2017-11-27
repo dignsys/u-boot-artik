@@ -13,7 +13,7 @@ BuildRequires: u-boot-tools
 %description
 bootloader for Embedded boards based on ARM processor
 
-%define os_version 1.0.0
+%define os_version 3.0.0
 
 %prep
 %setup -q

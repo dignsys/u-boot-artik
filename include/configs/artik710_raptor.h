@@ -425,6 +425,7 @@
 	"lcd1_0=s6e8fa0\0"						\
 	"lcd2_0=gst7d0038\0"						\
 	"lcd_panel=s6e8fa0\0"						\
+	"bootmode=ramdisk\0"						\
 	"sdrecovery=run boot_cmd_sdboot;"				\
 		"sd_recovery mmc 1:3 48000000 partmap_emmc.txt\0"	\
 	"factory_load=factory_info load mmc 0 "				\
@@ -455,14 +456,28 @@
 		"fi;\0"							\
 	"load_kernel=ext4load mmc ${rootdev}:${bootpart} $kerneladdr $kernel_file\0" \
 	"load_initrd=" \
-		"if test -e mmc ${rootdev}:${bootpart} ramdisk.img; then " \
-			"setenv ramdisk_file ramdisk.img;" \
-		"fi;" \
+		"if test ${bootmode} = recovery || test ${bootmode} = fota; then; "	\
+			"if test -e mmc ${rootdev}:${bootpart} ramdisk-recovery.img; then " \
+				"echo ${bootmode} booting.;"	\
+				"setenv ramdisk_file ramdisk-recovery.img;" \
+				"setenv ramdisksize 0xc00000;"		\
+			"else "	\
+				"echo There is no Recovery Image!!!;"	\
+				"echo Try to do the Normal Ramdisk Booting!!;"	\
+				"setenv ramdisk_file ramdisk.img;" \
+				"setenv bootmode ramdisk;"	\
+			"fi;" \
+		"else "	\
+			"if test -e mmc ${rootdev}:${bootpart} ramdisk.img; then " \
+				"echo ${bootmode} booting.;"	\
+				"setenv ramdisk_file ramdisk.img;" \
+			"fi;" \
+		"fi;"	\
 		"if test -e mmc ${rootdev}:${bootpart} ${ramdisk_file}; then " \
 			"setenv bootargs ${console} "			\
 			"root=/dev/ram0 ${root_rw} "			\
 			"${opts} ${recoverymode} "			\
-			"drm_panel=$lcd_panel;"				\
+			"drm_panel=$lcd_panel bootmode=${bootmode};"	\
 		"fi;"							\
 		"ext4load mmc ${rootdev}:${bootpart} $ramdiskaddr $ramdisk_file\0" \
 	"boot_cmd_initrd="						\

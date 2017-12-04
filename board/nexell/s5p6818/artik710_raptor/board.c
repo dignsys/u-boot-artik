@@ -226,6 +226,32 @@ void dram_init_banksize(void)
 	gd->bd->bi_dram[0].size  = CONFIG_SYS_SDRAM_SIZE;
 }
 
+static void check_reboot_mode(void)
+{
+	u32 val;
+
+	val = readl(PHY_BASEADDR_ALIVE + SCRATCHREADREG7);
+
+	/* Clear the reboot mode */
+	writel(0xFFFFFFFF, PHY_BASEADDR_ALIVE + SCRATCHRSTREG7);
+	writel(0x0, PHY_BASEADDR_ALIVE + SCRATCHSETREG7);
+
+	if ((val & REBOOT_PREFIX_MASK) == REBOOT_PREFIX) {
+		val &= ~REBOOT_PREFIX;
+
+		if (val == REBOOT_DOWNLOAD)
+			run_command("thordown", 0);
+		else if (val == REBOOT_RECOVERY)
+			setenv("bootmode", "recovery");
+		else if (val == REBOOT_FOTA)
+			setenv("bootmode", "fota");
+		else
+			setenv("bootmode", "ramdisk");
+
+		saveenv();
+	}
+}
+
 #ifdef CONFIG_DM_PMIC_NXE2000
 void pmic_init(void)
 {
@@ -326,6 +352,8 @@ int board_late_init(void)
 #ifdef CONFIG_ARTIK_OTA
 	check_ota_update();
 #endif
+	check_reboot_mode();
+
 	return 0;
 }
 

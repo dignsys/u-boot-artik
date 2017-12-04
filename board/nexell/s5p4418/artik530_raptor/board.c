@@ -215,7 +215,7 @@ static void set_booting_device(void)
 	int boot_mode = readl(PHY_BASEADDR_CLKPWR + SYSRSTCONFIG);
 
 	if ((boot_mode & BOOTMODE_MASK) == BOOTMODE_SDMMC) {
-		port_num = readl(PHY_BASEADDR_SRAM + DEVICEBOOTINFO);
+		port_num = readl(SCR_ARM_SECOND_BOOT_REG1);
 		/*
 		 * Kernel will be detected as the below block devices.
 		 * mmcblk0 - eMMC card

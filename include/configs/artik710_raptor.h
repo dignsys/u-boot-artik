@@ -477,7 +477,8 @@
 			"setenv bootargs ${console} "			\
 			"root=/dev/ram0 ${root_rw} "			\
 			"${opts} ${recoverymode} "			\
-			"drm_panel=$lcd_panel bootmode=${bootmode};"	\
+			"drm_panel=$lcd_panel bootdev=mmcblk${rootdev} "	\
+			"bootmode=${bootmode};"				\
 		"fi;"							\
 		"ext4load mmc ${rootdev}:${bootpart} $ramdiskaddr $ramdisk_file\0" \
 	"boot_cmd_initrd="						\

@@ -54,7 +54,8 @@ rm -rf %{buildroot}
 # u-boot installation
 mkdir -p %{buildroot}/boot/u-boot
 install -d %{buildroot}/boot/u-boot
-install -m 755 bootloader.img %{buildroot}/boot/u-boot
+install -m 755 bootloader.img %{buildroot}/boot/u-boot/nonsigned-bootloader.img
+install -m 755 ./scripts/tizen/artik530s/os_3.0.0/bootloader.img %{buildroot}/boot/u-boot
 install -m 755 params.bin %{buildroot}/boot/u-boot
 
 %clean

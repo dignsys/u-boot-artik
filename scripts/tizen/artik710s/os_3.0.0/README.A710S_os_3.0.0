@@ -1,0 +1,38 @@
+1. Description:
+==============
+
+These images are for migrating ARTIK Software version to Tizen OS_3.0.0.
+SamsungARTIK github is provided the migration image on git repository.
+(https://github.com/SamsungARTIK/boot-firmwares-artik710s)
+
+It needs to downgrade for using the Tizen booting.
+
+*NOTE:
+These images are for ARTIK710S_OS_3.0.0.
+ARTIK710S is introduced since OS_3.0.0.
+
+2. Usage:
+=========
+
+Target device side:
+
+#artik710:fastboot 0
+
+Host side:
+$./flash_boot_for_tizen.sh
+
+Then it will be flased all image into artik710S board.
+
+3. Image information:
+=====================
+- bl-emmcboot.img			- from SamsungARTIK github
+- fip-loader-emmc.img			- from SamsungARTIK github
+- partmap_artik710s_tizen_emmc.txt	- Tizen specific
+- fip-nonsecure.img			- from Tizen Released image
+- tizen_params.bin			- from Tizen Released image
+- boot.img				- from Tizen Released image
+- flash_boot_for_tizen.sh		- Tizen specific
+
+4. Contact
+==========
+If face on some problems, contact to Tizen Kernel Part.

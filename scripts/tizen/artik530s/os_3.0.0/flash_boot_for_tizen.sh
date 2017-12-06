@@ -7,6 +7,7 @@ sudo fastboot flash loader ./loader-emmc.img
 sudo fastboot flash blmon ./bl_mon.img
 sudo fastboot flash bootloader ./bootloader.img
 sudo fastboot flash env ./tizen_params.bin
+sudo fastboot flash boot ./boot.img
 
 sudo fastboot reboot
 

@@ -3,7 +3,7 @@
 
 These images are for downgrading ARTIK Software version to OS_2.0.0.
 SamsungARTIK github is provided the migration image on git repository.
-(https://github.com/SamsungARTIK/boot-firmware-artik710)
+(https://github.com/SamsungARTIK/boot-firmwares-artik710)
 Tizen also needs to provide the migration image for each versions.
 
 Current ARTIK release version is OS_3.0.0. (From 2017.11.13).

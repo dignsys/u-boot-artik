@@ -110,6 +110,8 @@
 /* refer to common/env_common.c	*/
 #define CONFIG_BOOTDELAY			3
 
+#define CONFIG_SUPPORT_RAW_INITRD
+
 /*-----------------------------------------------------------------------
  * Miscellaneous configurable options
  */
@@ -379,6 +381,8 @@
 	"fdt_high=0xffffffff\0"						\
 	"kernel_file=zImage\0"						\
 	"ramdisk_file=uInitrd\0"					\
+	"ramdiskaddr=0x49000000\0"					\
+	"ramdisksize=0x800000\0"							\
 	"sdram_base=" __stringify(CONFIG_SYS_SDRAM_BASE) "\0"		\
 	"kernel_offs=0x00080000\0"					\
 	"ramdisk_offs=0x09000000\0"					\
@@ -438,6 +442,7 @@
 	"lcd1_0=s6e8fa0\0"						\
 	"lcd2_0=gst7d0038\0"						\
 	"lcd_panel=s6e8fa0\0"						\
+	"bootmode=ramdisk\0"						\
 	"sdrecovery=run boot_cmd_sdboot;"				\
 		"sd_recovery mmc 1:3 $sdrecaddr partmap_emmc.txt\0"	\
 	"factory_load=factory_info load mmc 0 "				\
@@ -467,10 +472,35 @@
 			"ext4load mmc ${rootdev}:${bootpart} $kerneladdr $kernel_file; " \
 			"run load_args; "				\
 		"fi;\0"							\
-	"load_initrd=ext4load mmc ${rootdev}:${bootpart} $ramdiskaddr $ramdisk_file\0" \
+	"load_initrd=" \
+		"if test ${bootmode} = recovery || test ${bootmode} = fota; then; "	\
+			"if test -e mmc ${rootdev}:${bootpart} ramdisk-recovery.img; then " \
+				"echo ${bootmode} booting.;"	\
+				"setenv ramdisk_file ramdisk-recovery.img;" \
+				"setenv ramdisksize 0xc00000;"          \
+			"else "	\
+				"echo There is no Recovery Image!!!;"	\
+				"echo Try to do the Normal Ramdisk Booting!!;"	\
+				"setenv ramdisk_file ramdisk.img;" \
+				"setenv bootmode ramdisk;"	\
+			"fi;" \
+		"else "	\
+			"if test -e mmc ${rootdev}:${bootpart} ramdisk.img; then " \
+				"echo ${bootmode} booting.;"	\
+				"setenv ramdisk_file ramdisk.img;" \
+			"fi;" \
+		"fi;"	\
+		"if test -e mmc ${rootdev}:${bootpart} ${ramdisk_file}; then " \
+			"setenv bootargs ${console} "			\
+			"root=/dev/ram0 ${root_rw} "			\
+			"${opts} ${recoverymode} "			\
+			"drm_panel=$lcd_panel bootdev=mmcblk${rootdev} "		\
+			"bootmode=${bootmode};"		\
+		"fi;"							\
+		"ext4load mmc ${rootdev}:${bootpart} $ramdiskaddr $ramdisk_file\0" \
 	"boot_cmd_initrd="						\
 		"run load_kernel; run load_fdt; run load_initrd;"	\
-		"bootz $kerneladdr $ramdiskaddr $fdtaddr\0"		\
+		"bootz $kerneladdr ${ramdiskaddr}:${ramdisksize} $fdtaddr\0"	\
 	"boot_cmd_mmcboot="						\
 		"run load_kernel; run load_fdt;"			\
 		"bootz $kerneladdr - $fdtaddr\0"			\

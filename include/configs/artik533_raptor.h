@@ -45,6 +45,9 @@
 #define COUNTER_FREQUENCY			200000000
 #define CPU_RELEASE_ADDR			CONFIG_SYS_INIT_SP_ADDR
 
+#define CONFIG_SIG
+#define CONFIG_EXTRA_SIZE	SZ_1K
+
 /*-----------------------------------------------------------------------
  *  High Level System Configuration
  */

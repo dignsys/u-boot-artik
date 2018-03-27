@@ -13,6 +13,13 @@ BuildRequires: u-boot-tools
 %description
 bootloader for Embedded boards based on ARM processor
 
+%package -n u-boot-artik533s
+Summary: A bootloader for ARTIK533S board
+Group: System/Kernel
+
+%description -n u-boot-artik533s
+bootloader for ARTIK533S Embedded boards based on ARM processor
+
 %define os_version 3.0.0
 
 %prep
@@ -58,8 +65,18 @@ install -m 755 bootloader.img %{buildroot}/boot/u-boot/nonsigned-bootloader.img
 install -m 755 ./scripts/tizen/artik530s/os_3.0.0/bootloader.img %{buildroot}/boot/u-boot
 install -m 755 params.bin %{buildroot}/boot/u-boot
 
+# u-boot artik533 installation
+mkdir -p %{buildroot}/boot/u-boot-artik533s
+install -d %{buildroot}/boot/u-boot-artik533s
+install -m 755 ./scripts/tizen/artik533s/os_3.2.0/bootloader.img %{buildroot}/boot/u-boot-artik533s
+install -m 755 ./scripts/tizen/artik533s/os_3.2.0/tizen_params.bin %{buildroot}/boot/u-boot-artik533s/params.bin
+
 %clean
 
 %files
 %defattr(-,root,root,-)
 /boot/u-boot
+
+%files -n u-boot-artik533s
+%defattr(-,root,root,-)
+/boot/u-boot-artik533s

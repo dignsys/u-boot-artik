@@ -1,0 +1,40 @@
+1. Description:
+==============
+
+These images are to migrate ARTIK Software version to OS_3.2.0.
+SamsungARTIK github is provided the migration image on git repository.
+(https://github.com/SamsungARTIK/boot-firmwares-artik533s)
+
+Current ARTIK533 release version is OS_3.2.0. (From 2018.03.26).
+If wants to use the OS_3.2.0 version, it needs to flash these images.
+
+*NOTE:
+These images are for ARTIK533S_OS_3.2.0.
+(ARTIK533S is an aritk530s model with 1GB RAM.)
+
+
+2. Usage:
+=========
+
+Target device side:
+
+#artik530:fastboot 0
+
+Host side:
+$./flash_boot_for_tizen.sh
+
+Then it will be flased all image into artik530 board.
+
+3. Image information:
+=====================
+- bl-emmcboot.img			- from SamsungARTIK github
+- bl_mon.img				- from SamsungARTIK github
+- loader-emmc.img			- from SamsungARTIK github
+- partmap_artik530s_tizen_emmc.txt	- Tizen specific
+- bootloader.img			- from Tizen Released image with Signed
+- tizen_params.bin			- from Tizen Released image
+- flash_boot_for_tizen.sh		- Tizen specific
+
+4. Contact
+==========
+If face on some problems, contact to Tizen Kernel Part.

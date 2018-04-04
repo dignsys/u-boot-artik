@@ -424,9 +424,9 @@
 		"fi;\0"							\
 	"bootdelay=" __stringify(CONFIG_BOOTDELAY) "\0"			\
 	"console=" CONFIG_DEFAULT_CONSOLE				\
-	"consoleon=setenv console=" CONFIG_DEFAULT_CONSOLE		\
-		"; saveenv; reset\0"					\
-	"consoleoff=setenv console=ram; saveenv; reset\0"		\
+	"console_default=setenv console " CONFIG_DEFAULT_CONSOLE	\
+	"consoleon=run console_default; saveenv; reset\0"		\
+	"consoleoff=setenv console ram; saveenv; reset\0"		\
 	"rootdev=" __stringify(CONFIG_ROOT_DEV) "\0"			\
 	"rootpart=" __stringify(CONFIG_ROOT_PART) "\0"			\
 	"bootpart=" __stringify(CONFIG_BOOT_PART) "\0"			\

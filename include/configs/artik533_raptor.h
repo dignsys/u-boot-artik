@@ -372,6 +372,7 @@
 	"/ramdisk.img ext4 $rootdev $bootpart;" \
 	"/ramdisk-recovery.img ext4 $rootdev $bootpart;" \
 	"/s5p4418-artik533-raptor-rev00.dtb ext4 $rootdev $bootpart;" \
+	"/s5p4418-artik533-compy.dtb ext4 $rootdev $bootpart;" \
 	"boot part $rootdev $bootpart;" \
 	"modules part $rootdev $modulespart;" \
 	"rootfs part $rootdev $rootpart;" \

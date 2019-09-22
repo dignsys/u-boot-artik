@@ -114,7 +114,7 @@ tools/nexell/SECURE_BINGEN \
 	-n tools/nexell/nsih/raptor-sd.txt \
 	-i u-boot.bin \
 	-o bootloader.img \
-	-l 0x94c00000 -e 0x94c00000
+	-l 0x43c00000 -e 0x43c00000
 ```
 
 ---

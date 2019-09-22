@@ -85,6 +85,7 @@ static void check_hw_revision(void)
 {
 	u32 val = 0;
 
+#if 0 /* HBAHN */
 	val |= nx_gpio_get_input_value(4, 6);
 	val <<= 1;
 
@@ -92,6 +93,7 @@ static void check_hw_revision(void)
 	val <<= 1;
 
 	val |= nx_gpio_get_input_value(4, 4);
+#endif /* HBAHN */
 
 	board_rev = val;
 }
@@ -310,6 +312,7 @@ void pmic_init(void)
 	int ret = -ENODEV;
 	uint8_t bit_mask = 0;
 
+#if 0 /* HBAHN */
 	ret = pmic_get("nxe1500@33", &dev);
 	if (ret)
 		printf("Can't get PMIC: %s!\n", "nxe1500@33");
@@ -362,6 +365,13 @@ void pmic_init(void)
 	ret = pmic_write(dev, NXE2000_REG_LDOEN1, &bit_mask, 1);
 	if (ret)
 		printf("Can't write PMIC register: %d!\n", NXE2000_REG_LDOEN1);
+#endif /* HBAHN */
+
+	ret = pmic_get("nxe2000_gpio@32", &dev);
+	if (ret)
+		printf("Can't get PMIC: %s!\n", "nxe2000@32");
+
+	/* I have nothing to do */
 
 }
 #endif

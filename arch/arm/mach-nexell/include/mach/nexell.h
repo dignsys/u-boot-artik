@@ -337,8 +337,8 @@
 #define BOOTMODE_USB			6
 #define BOOTMODE_SDMMC_PORT_VAL(x)	((((x) >> 3) & 1) |	\
 					 (((x) >> 19 & 1) << 1))
-#define EMMC_PORT_NUM			2
-#define SD_PORT_NUM			0
+#define EMMC_PORT_NUM			0
+#define SD_PORT_NUM			2
 #define ID_REG_EC0				(0x54)
 #define WIRE0_MASK				(0x1)
 

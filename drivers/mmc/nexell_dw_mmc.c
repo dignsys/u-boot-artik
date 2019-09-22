@@ -234,7 +234,6 @@ int nexell_mmc_init(const void  *blob)
 	int count;
 	int node_list[3] = { 0, };
 
-
 	compat_id = COMPAT_NEXELL_DWMMC;
 	count = fdtdec_find_aliases_for_id(blob, "mmc",
 				compat_id, node_list, 3);

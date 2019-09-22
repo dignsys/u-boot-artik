@@ -22,16 +22,16 @@
  */
 
 #ifndef CONFIG_SYS_TEXT_BASE
-#define	CONFIG_SYS_TEXT_BASE			0x94C00000
+#define	CONFIG_SYS_TEXT_BASE			0x43C00000
 #endif
 /* init and run stack pointer */
 #define	CONFIG_SYS_INIT_SP_ADDR			CONFIG_SYS_TEXT_BASE
 
 /* malloc() pool */
 #define	CONFIG_MEM_MALLOC_START			(CONFIG_SYS_TEXT_BASE+0x400000)
-#define CONFIG_MEM_MALLOC_LENGTH	(CONFIG_ENV_SIZE + (1 << 20) +	\
-					CONFIG_SYS_DFU_DATA_BUF_SIZE * 2 + \
-					(8 << 20))
+#define CONFIG_MEM_MALLOC_LENGTH		(CONFIG_ENV_SIZE + (1 << 20) +	\
+						CONFIG_SYS_DFU_DATA_BUF_SIZE * 2 + \
+						(8 << 20))
 
 /* when CONFIG_LCD */
 #define CONFIG_FB_ADDR				(CONFIG_SYS_TEXT_BASE+0x2400000)
@@ -62,8 +62,8 @@
 #define CONFIG_SYS_SDRAM_BASE			SDRAM_BASE
 #define CONFIG_SYS_SDRAM_SIZE			SDRAM_SIZE
 #else
-#define	CONFIG_SYS_SDRAM_BASE			0x91000000U
-#define	CONFIG_SYS_SDRAM_SIZE			0x1f000000U
+#define	CONFIG_SYS_SDRAM_BASE			0x40000000U
+#define	CONFIG_SYS_SDRAM_SIZE			0x40000000U
 #endif
 
 /* dram 1 bank num */
@@ -111,7 +111,7 @@
  *	U-Boot Environments
  */
 /* refer to common/env_common.c	*/
-#define CONFIG_BOOTDELAY			3
+#define CONFIG_BOOTDELAY			1
 
 #define CONFIG_SUPPORT_RAW_INITRD
 
@@ -267,8 +267,11 @@
 #define CONFIG_CMD_FASTBOOT
 #define CONFIG_FASTBOOT_FLASH
 #define CONFIG_FASTBOOT_FLASH_MMC_DEV   0
-#define CONFIG_FASTBOOT_BUF_SIZE        (CONFIG_SYS_SDRAM_SIZE - SZ_1M)
 #define CONFIG_FASTBOOT_BUF_ADDR        CONFIG_SYS_SDRAM_BASE
+#define CONFIG_FASTBOOT_BUF_SIZE	0x38000000
+/*
+#define CONFIG_FASTBOOT_BUF_SIZE        (CONFIG_SYS_SDRAM_SIZE - SZ_1M)
+*/
 #define CONFIG_USB_GADGET
 #define CONFIG_USB_GADGET_DUALSPEED
 #define CONFIG_USB_GADGET_VBUS_DRAW     0
@@ -388,9 +391,10 @@
 
 #define CONFIG_EXTRA_ENV_SETTINGS					\
 	"fdt_high=0xffffffff\0"						\
+	"initrd_high=0xffffffff\0" 					\
 	"kernel_file=zImage\0"						\
 	"ramdiskaddr=0x49000000\0"					\
-	"ramdisksize=0x800000\0"							\
+	"ramdisksize=0x800000\0"					\
 	"ramdisk_file=uInitrd\0"					\
 	"sdram_base=" __stringify(CONFIG_SYS_SDRAM_BASE) "\0"		\
 	"kernel_offs=0x00080000\0"					\
@@ -401,7 +405,7 @@
 		"setexpr kerneladdr $sdram_base + $kernel_offs; "	\
 		"setexpr ramdiskaddr $sdram_base + $ramdisk_offs; "	\
 		"setexpr fdtaddr $sdram_base + $fdt_offs\0"		\
-	"gen_sdrecaddr="										\
+	"gen_sdrecaddr="						\
 		"setexpr sdrecaddr $sdram_base + $sd_offset\0"	\
 	"load_fdt="							\
 		"if test -z \"$fdtfile\"; then "                        \
@@ -442,9 +446,9 @@
 	"dfu_usb_con=0\0"						\
 	"dfu_interface=mmc\0"						\
 	"dfu_device=0\0"						\
-	"lcd1_0=s6e8fa0\0"						\
+	"lcd1_0=hx8394d\0"						\
 	"lcd2_0=gst7d0038\0"						\
-	"lcd_panel=s6e8fa0\0"						\
+	"lcd_panel=hx8394d\0"						\
 	"bootmode=ramdisk\0"						\
 	"sdrecovery=run boot_cmd_sdboot;"				\
 		"sd_recovery mmc 1:3 $sdrecaddr partmap_emmc.txt\0"	\

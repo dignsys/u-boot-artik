@@ -305,73 +305,87 @@ static void check_reboot_mode(void)
 	}
 }
 
+static int board_set_regulator(const char *name, uint uv)
+{
+        struct udevice *dev;
+        int ret;
+
+        ret = regulator_get_by_platname(name, &dev);
+        if (ret) {
+                debug("%s: Cannot find regulator %s\n", __func__, name);
+                return ret;
+        }
+        ret = regulator_set_value(dev, uv);
+        if (ret) {
+                debug("%s: Cannot set regulator %s\n", __func__, name);
+                return ret;
+        }
+
+        return 0;
+}
+
 #ifdef CONFIG_DM_PMIC_NXE2000
 void pmic_init(void)
 {
+	struct udevice *pmic;
 	static struct udevice *dev;
 	int ret = -ENODEV;
 	uint8_t bit_mask = 0;
+#ifdef CONFIG_DM_REGULATOR
+	struct dm_regulator_uclass_platdata *reg_uc_pdata;
+	struct udevice *regulator;
+#endif
 
-#if 0 /* HBAHN */
-	ret = pmic_get("nxe1500@33", &dev);
+	ret = pmic_get("nxe2000_gpio@32", &pmic);
 	if (ret)
-		printf("Can't get PMIC: %s!\n", "nxe1500@33");
+		printf("Can't get PMIC: %s!\n", "nxe2000_gpio@32");
 
-	bit_mask = 0x00;
-	bit_mask = pmic_reg_read(dev, NXE2000_REG_PWRONTIMSET);
-	bit_mask &= ~(0x1 << NXE2000_POS_PWRONTIMSET_OFF_JUDGE_PWRON);
-	bit_mask |= (0x0 << NXE2000_POS_PWRONTIMSET_OFF_JUDGE_PWRON);
-	ret = pmic_write(dev, NXE2000_REG_PWRONTIMSET, &bit_mask, 1);
+	if (device_has_children(pmic)) {
+#ifdef CONFIG_DM_REGULATOR
+		for (ret = uclass_find_first_device(UCLASS_REGULATOR, &dev);
+			dev;
+			ret = uclass_find_next_device(&dev)) {
+			if (ret)
+			continue;
+
+			reg_uc_pdata = dev_get_uclass_platdata(dev);
+			if (!reg_uc_pdata)
+				continue;
+
+			uclass_get_device_tail(dev, 0, &regulator);
+		}
+#endif
+	}
+
+	ret = regulators_enable_boot_on(false);
 	if (ret)
-		printf("Can't write PMIC REG: %d!\n", NXE2000_REG_PWRONTIMSET);
+		printf("Can't enable PMIC: %s!\n", "nxe2000_gpio@32");
 
-	bit_mask = ((0 << NXE2000_POS_DCxCTL2_DCxOSC) |
-			(0 << NXE2000_POS_DCxCTL2_DCxSR) |
-			(3 << NXE2000_POS_DCxCTL2_DCxLIM) |
-			(0 << NXE2000_POS_DCxCTL2_DCxLIMSDEN));
-	ret = pmic_write(dev, NXE2000_REG_DC1CTL2, &bit_mask, 1);
+	/* set CPU voltage to 1.1v */
+	ret = board_set_regulator("dcdc1", 1100000);
 	if (ret)
-		printf("Can't write PMIC register: %d!\n", NXE2000_REG_DC1CTL2);
+		printf("Can't set regulator : %s!\n", "dcdc1");
 
-	bit_mask = ((0 << NXE2000_POS_DCxCTL2_DCxOSC) |
-			(0 << NXE2000_POS_DCxCTL2_DCxSR) |
-			(3 << NXE2000_POS_DCxCTL2_DCxLIM) |
-			(0 << NXE2000_POS_DCxCTL2_DCxLIMSDEN));
-	ret = pmic_write(dev, NXE2000_REG_DC2CTL2, &bit_mask, 1);
+
+	/* set core voltage to 1.05v, avaliable range 1V ~ 1.1V */
+	ret = board_set_regulator("dcdc2", 1050000);
 	if (ret)
-		printf("Can't write PMIC register: %d!\n", NXE2000_REG_DC2CTL2);
+		printf("Can't set regulator : %s!\n", "dcdc2");
 
-	bit_mask = ((0 << NXE2000_POS_DCxCTL2_DCxOSC) |
-			(0 << NXE2000_POS_DCxCTL2_DCxSR) |
-			(1 << NXE2000_POS_DCxCTL2_DCxLIM) |
-			(1 << NXE2000_POS_DCxCTL2_DCxLIMSDEN));
-	ret = pmic_write(dev, NXE2000_REG_DC3CTL2, &bit_mask, 1);
+	/* set DCDC3 voltage to 3.3v */
+	ret = board_set_regulator("dcdc3", 3300000);
 	if (ret)
-		printf("Can't write PMIC register: %d!\n", NXE2000_REG_DC3CTL2);
+		printf("Can't set regulator : %s!\n", "dcdc3");
 
-	bit_mask = ((0 << NXE2000_POS_DCxCTL2_DCxOSC) |
-			(0 << NXE2000_POS_DCxCTL2_DCxSR) |
-			(1 << NXE2000_POS_DCxCTL2_DCxLIM) |
-			(1 << NXE2000_POS_DCxCTL2_DCxLIMSDEN));
-	ret = pmic_write(dev, NXE2000_REG_DC4CTL2, &bit_mask, 1);
+	/* set DCDC4 voltage to 1.5v */
+	ret = board_set_regulator("dcdc4", 1500000);
 	if (ret)
-		printf("Can't write PMIC register: %d!\n", NXE2000_REG_DC4CTL2);
+		printf("Can't set regulator : %s!\n", "dcdc4");
 
-	bit_mask = ((1 << NXE2000_POS_LDOEN1_LDO1EN) |
-			(1 << NXE2000_POS_LDOEN1_LDO2EN) |
-			(1 << NXE2000_POS_LDOEN1_LDO3EN) |
-			(0 << NXE2000_POS_LDOEN1_LDO4EN) |
-			(0 << NXE2000_POS_LDOEN1_LDO5EN));
-	ret = pmic_write(dev, NXE2000_REG_LDOEN1, &bit_mask, 1);
+	/* set DCDC5 voltage to 1.5v */
+	ret = board_set_regulator("dcdc5", 1500000);
 	if (ret)
-		printf("Can't write PMIC register: %d!\n", NXE2000_REG_LDOEN1);
-#endif /* HBAHN */
-
-	ret = pmic_get("nxe2000_gpio@32", &dev);
-	if (ret)
-		printf("Can't get PMIC: %s!\n", "nxe2000@32");
-
-	/* I have nothing to do */
+		printf("Can't set regulator : %s!\n", "dcdc5");
 
 }
 #endif

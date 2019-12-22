@@ -362,7 +362,7 @@ void pmic_init(void)
 		printf("Can't enable PMIC: %s!\n", "nxe2000_gpio@32");
 
 	/* set CPU voltage to 1.1v */
-	ret = board_set_regulator("dcdc1", 1100000);
+	ret = board_set_regulator("dcdc1", 1250000);
 	if (ret)
 		printf("Can't set regulator : %s!\n", "dcdc1");
 

@@ -26,7 +26,6 @@
 		status = "disabled";
 	};
 
-
 	mmc1:mmc@c0068000 {
 		#address-cells = <1>;
 		#size-cells = <0>;

@@ -51,6 +51,7 @@ static void check_hw_revision(void)
 {
 	u32 val = 0;
 
+#if 0 /* HBAHN */
 	val |= nx_gpio_get_input_value(4, 6);
 	val <<= 1;
 
@@ -58,6 +59,7 @@ static void check_hw_revision(void)
 	val <<= 1;
 
 	val |= nx_gpio_get_input_value(4, 4);
+#endif /* HBAHN */
 
 	board_rev = val;
 }
@@ -279,6 +281,7 @@ void pmic_init(void)
 	int ret = -ENODEV;
 	uint8_t bit_mask = 0;
 
+#if 0
 #ifdef CONFIG_REVISION_TAG
 	if (get_board_rev() >= 3) {
 		ret = pmic_get("nxe2000_gpio@32", &dev);
@@ -292,6 +295,11 @@ void pmic_init(void)
 #ifdef CONFIG_REVISION_TAG
 	}
 #endif
+#endif
+
+	ret = pmic_get("nxe2000_gpio@32", &dev);
+	if (ret)
+		printf("Can't get PMIC: %s!\n", "nxe2000_gpio@32");
 
 	bit_mask = pmic_reg_read(dev, NXE2000_REG_PWRONTIMSET);
 	bit_mask &= ~(0x1 << NXE2000_POS_PWRONTIMSET_OFF_JUDGE_PWRON);

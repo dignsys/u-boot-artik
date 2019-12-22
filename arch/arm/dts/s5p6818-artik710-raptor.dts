@@ -64,8 +64,8 @@
 		compatible = "i2c-gpio";
 		#address-cells = <1>;
 		#size-cells = <0>;
-		gpios = <&gpio_c 16 1>,	/* SDA */
-		      <&gpio_c 15 1>;	/* SCL */
+		gpios = <&gpio_d 5 1>,	/* SDA */
+		        <&gpio_d 4 1>;	/* SCL */
 
 		i2c-gpio,delay-us = <3>;
 		nxe2000_gpio@32 {

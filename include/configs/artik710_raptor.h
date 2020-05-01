@@ -58,7 +58,16 @@
 
 /* board_init_f */
 #define	CONFIG_SYS_SDRAM_BASE			0x40000000U
+
+#if 1 /* for 1G */
 #define	CONFIG_SYS_SDRAM_SIZE			0x3DF00000U
+#else /* for 2G */
+/* 
+ * strange, artik kernel work with 0x80000000 size only, not work with 0x7DF00000, or else 
+ * I do not know why have reserved memory on 1G memory
+ */
+#define	CONFIG_SYS_SDRAM_SIZE			0x80000000U
+#endif
 
 /* dram 1 bank num */
 #define CONFIG_NR_DRAM_BANKS			1

@@ -274,7 +274,7 @@ static void check_reboot_mode(void)
 	}
 }
 
-#ifdef CONFIG_DM_PMIC_NXE2000
+#ifdef CONFIG_DM_PMIC_NXE2000__	/* not used now */
 void pmic_init(void)
 {
 	static struct udevice *dev;
@@ -357,6 +357,106 @@ void pmic_init(void)
 	ret = pmic_write(dev, NXE2000_REG_CHGCTL1, &bit_mask, 1);
 	if (ret)
 		printf("Can't write PMIC register: %d!\n", NXE2000_REG_CHGCTL1);
+}
+#endif
+
+#ifdef CONFIG_DM_PMIC_NXE2000
+static int board_set_regulator(const char *name, uint uv)
+{
+        struct udevice *dev;
+        int ret;
+
+        ret = regulator_get_by_platname(name, &dev);
+        if (ret) {
+                debug("%s: Cannot find regulator %s\n", __func__, name);
+                return ret;
+        }
+        ret = regulator_set_value(dev, uv);
+        if (ret) {
+                debug("%s: Cannot set regulator %s\n", __func__, name);
+                return ret;
+        }
+
+        return 0;
+}
+
+void pmic_init(void)
+{
+	struct udevice *pmic;
+	static struct udevice *dev;
+	int ret = -ENODEV;
+	uint8_t bit_mask = 0;
+#ifdef CONFIG_DM_REGULATOR
+	struct dm_regulator_uclass_platdata *reg_uc_pdata;
+	struct udevice *regulator;
+#endif
+
+	ret = pmic_get("nxe2000_gpio@32", &pmic);
+	if (ret)
+		printf("Can't get PMIC: %s!\n", "nxe2000_gpio@32");
+
+	if (device_has_children(pmic)) {
+#ifdef CONFIG_DM_REGULATOR
+		for (ret = uclass_find_first_device(UCLASS_REGULATOR, &dev);
+			dev;
+			ret = uclass_find_next_device(&dev)) {
+			if (ret)
+			continue;
+
+			reg_uc_pdata = dev_get_uclass_platdata(dev);
+			if (!reg_uc_pdata)
+				continue;
+
+			uclass_get_device_tail(dev, 0, &regulator);
+		}
+#endif
+	}
+
+	ret = regulators_enable_boot_on(false);
+	if (ret)
+		printf("Can't enable PMIC: %s!\n", "nxe2000_gpio@32");
+
+	/* set CPU voltage to 1.1v */
+	ret = board_set_regulator("dcdc1", 1250000);
+	if (ret)
+		printf("Can't set regulator : %s!\n", "dcdc1");
+
+
+	/* set core voltage to 1.05v, avaliable range 1V ~ 1.1V */
+	ret = board_set_regulator("dcdc2", 1050000);
+	if (ret)
+		printf("Can't set regulator : %s!\n", "dcdc2");
+
+	/* set DCDC3 voltage to 3.3v */
+	ret = board_set_regulator("dcdc3", 3300000);
+	if (ret)
+		printf("Can't set regulator : %s!\n", "dcdc3");
+
+	if (gd->ram_size < 0x40000000) /* 1GB DDR3, VDD 1.5V */
+	{
+		/* set DCDC4 voltage to 1.5v */
+		ret = board_set_regulator("dcdc4", 1500000);
+		if (ret)
+			printf("Can't set regulator : %s!\n", "dcdc4");
+	
+		/* set DCDC5 voltage to 1.5v */
+		ret = board_set_regulator("dcdc5", 1500000);
+		if (ret)
+			printf("Can't set regulator : %s!\n", "dcdc5");
+	}
+	else 	/* 2GB DDR3L, VDD 1.35V */
+	{
+		/* set DCDC4 voltage to 1.35v */
+		ret = board_set_regulator("dcdc4", 1350000);
+		if (ret)
+			printf("Can't set regulator : %s!\n", "dcdc4");
+	
+		/* set DCDC5 voltage to 1.35v */
+		ret = board_set_regulator("dcdc5", 1350000);
+		if (ret)
+			printf("Can't set regulator : %s!\n", "dcdc5");
+	}
+
 }
 #endif
 
